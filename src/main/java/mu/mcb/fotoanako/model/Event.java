@@ -5,12 +5,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 @Data
-@Accessors(fluent = true)
 @Entity
 @Table(name = "event")
 public class Event {
@@ -20,7 +18,8 @@ public class Event {
   private Long id;
   private String title;
   private String description;
-  private LocalDate date;
-  private String label;
+  private String location;
+  private LocalDateTime startDate;
+  private LocalDateTime endDate;
 
 }

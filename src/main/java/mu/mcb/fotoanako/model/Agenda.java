@@ -11,10 +11,8 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.List;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 @Data
-@Accessors(fluent = true)
 @Entity
 @Table(name = "agenda")
 public class Agenda {
