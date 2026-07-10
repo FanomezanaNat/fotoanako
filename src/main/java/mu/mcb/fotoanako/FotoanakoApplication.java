@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class FotoanakoApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(FotoanakoApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(FotoanakoApplication.class, args);
+  }
 
 }
