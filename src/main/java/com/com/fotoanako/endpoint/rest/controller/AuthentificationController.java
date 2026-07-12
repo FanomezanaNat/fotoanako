@@ -1,14 +1,16 @@
 package com.com.fotoanako.endpoint.rest.controller;
 
-import jakarta.validation.Valid;
 import com.com.fotoanako.model.LoginForm;
 import com.com.fotoanako.model.dto.AuthentificationResponse;
 import com.com.fotoanako.model.dto.UserRequest;
 import com.com.fotoanako.model.dto.UserResponse;
-import com.com.fotoanako.service.AuthentificationService;
 import com.com.fotoanako.service.UserService;
+import com.com.fotoanako.service.security.AuthentificationService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -31,6 +33,16 @@ public class AuthentificationController {
   public AuthentificationResponse login(@Valid @RequestBody LoginForm form) {
 
     return authService.login(form);
+  }
+
+  @PostMapping("/logout")
+  public ResponseEntity<Void> logout(
+      @RequestHeader(value = "Authorization", required = false) String authHeader) {
+
+    authService.logout(authHeader);
+
+    return ResponseEntity.noContent()
+        .build();
   }
 
 }

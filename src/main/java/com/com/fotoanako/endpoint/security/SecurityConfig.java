@@ -1,10 +1,11 @@
 package com.com.fotoanako.endpoint.security;
 
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -48,13 +49,13 @@ public class SecurityConfig {
   public SecurityFilterChain filterChain(HttpSecurity http) {
     return http
         .csrf(AbstractHttpConfigurer::disable)
-        .sessionManagement(sm -> sm.sessionCreationPolicy(STATELESS))
+        .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(STATELESS))
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers(HttpMethod.GET, "/ping")
+            .requestMatchers(GET, "/ping")
             .permitAll()
-            .requestMatchers(HttpMethod.POST, "/login")
+            .requestMatchers(POST, "/login")
             .permitAll()
-            .requestMatchers(HttpMethod.POST, "/register")
+            .requestMatchers(POST, "/register")
             .permitAll()
             .requestMatchers("/h2-console/**")
             .permitAll()

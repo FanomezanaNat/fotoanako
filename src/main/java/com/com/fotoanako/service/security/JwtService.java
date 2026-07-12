@@ -1,4 +1,4 @@
-package com.com.fotoanako.service;
+package com.com.fotoanako.service.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -1,4 +1,4 @@
-package com.com.fotoanako.service;
+package com.com.fotoanako.service.security;
 
 import com.com.fotoanako.model.LoginForm;
 import com.com.fotoanako.model.User;
@@ -14,13 +14,15 @@ public class AuthentificationService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
+  private final BlackListTokenService blackListTokenService;
 
 
   public AuthentificationService(UserRepository userRepository, PasswordEncoder passwordEncoder,
-      JwtService jwtService) {
+      JwtService jwtService, BlackListTokenService blackListTokenService) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
     this.jwtService = jwtService;
+    this.blackListTokenService = blackListTokenService;
   }
 
   public AuthentificationResponse login(LoginForm form) {
@@ -38,5 +40,19 @@ public class AuthentificationService {
         .email(user.getEmail())
         .role(user.getRole())
         .build();
+  }
+
+  public void logout(String authHeader) {
+
+    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+      return;
+    }
+
+    String token = authHeader.substring(7)
+        .trim();
+
+    jwtService.parseClaims(token); // Throws JwtException if invalid
+
+    blackListTokenService.blacklist(token);
   }
 }

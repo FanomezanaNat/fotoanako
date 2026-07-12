@@ -1,5 +1,8 @@
 package com.com.fotoanako.endpoint.security;
 
+import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
+
+import com.com.fotoanako.service.security.BlackListTokenService;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -8,7 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import com.com.fotoanako.service.JwtService;
+import com.com.fotoanako.service.security.JwtService;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,9 +27,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   private final JwtService jwtService;
+  private final BlackListTokenService blackListTokenService;
 
-  public JwtAuthenticationFilter(JwtService jwtService) {
+  public JwtAuthenticationFilter(JwtService jwtService, BlackListTokenService blackListTokenService) {
     this.jwtService = jwtService;
+    this.blackListTokenService = blackListTokenService;
   }
 
   @Override
@@ -40,6 +45,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     var token = header.substring(7);
+    if (blackListTokenService.isBlacklisted(token)) {
+      response.sendError(SC_UNAUTHORIZED,
+          "Token has been revoked");
+      return;
+    }
     try {
       var claims = jwtService.parseClaims(token);
       var email = claims.getSubject();
